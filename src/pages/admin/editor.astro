@@ -1,34 +1,31 @@
+----
+// 无需导入，纯前端逻辑
 ---
-import { onMount } from 'astro/client'
----
 
-<html>
-  <head><title>Editor</title></head>
-  <body>
-    <h1>写文章</h1>
-    <input id="title" placeholder="文章标题" />
-    <br/>
-    <textarea id="content" rows="10" cols="80" placeholder="文章内容"></textarea>
-    <br/>
-    <button id="submit">提交</button>
+<h1>写文章</h1>
+<input id="title" placeholder="文章标题" />
+<br />
+<textarea id="content" placeholder="文章内容" rows="10" cols="50"></textarea>
+<br />
+<button id="submit">提交</button>
 
-    <script>
-      document.getElementById('submit')?.addEventListener('click', async () => {
-        const titleInput = document.getElementById('title')
-        const contentInput = document.getElementById('content')
+<script>
+  document.getElementById('submit').addEventListener('click', async () => {
+    const title = document.getElementById('title').value.trim();
+    const content = document.getElementById('content').value.trim();
 
-        if (!titleInput || !contentInput) return
+    if (!title || !content) {
+      alert('标题和内容不能为空！');
+      return;
+    }
 
-        const res = await fetch('/api/post', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            title: titleInput.value,
-            content: contentInput.value,
-          }),
-        })
-        if (res.ok) alert('发布成功！')
-      })
-    </script>
-  </body>
-</html>
+    const res = await fetch('/api/post', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({title, content}),
+    });
+
+    if (res.ok) alert('发布成功！');
+    else alert('发布失败！');
+  });
+</script>
