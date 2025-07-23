@@ -1,30 +1,26 @@
 ---
-import { listPosts } from '../../lib/kv.ts';
+import { onMount } from 'astro/client'
 
-const posts = await listPosts();
+const res = await fetch('/api/list')
+const { posts } = await res.json()
 ---
 
 <html>
+  <head><title>文章列表</title></head>
   <body>
-    <h1>博客管理</h1>
-    <a href="/admin/editor">➕ 新建文章</a>
+    <h1>已发布文章</h1>
     <ul>
       {posts.map((p: string) => (
-        <li key={p}>
-          {p} -
-          <a href={`/admin/editor?slug=${p}`}>编辑</a> -
+        <li>
+          <span>{p}</span>
           <button
-            onClick={async () => {
-              await fetch(`/api/posts?slug=${p}`, { method: 'DELETE' });
-              location.reload();
+            onclick={async () => {
+              await fetch(`/api/delete?title=${p}`)
+              location.reload()
             }}
-          >
-            删除
-          </button>
+          >删除</button>
         </li>
       ))}
     </ul>
-    <h2>可编辑页面</h2>
-    <a href="/admin/editor?page=about">编辑 About</a>
   </body>
 </html>
