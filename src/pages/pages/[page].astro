@@ -3,14 +3,11 @@ import { getPage } from '../../lib/kv';
 
 const { page } = Astro.params;
 
-if (!page) {
-  throw new Error('page 参数缺失');
-}
+if (!page) throw new Error('page 参数缺失');
 
 const data = await getPage(page);
-if (!data) {
-  throw new Error('页面未找到');
-}
+
+if (!data) throw new Error('页面未找到');
 ---
 
 <article>
