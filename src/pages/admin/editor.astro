@@ -1,0 +1,41 @@
+---
+const url = new URL(Astro.request.url);
+const slug = url.searchParams.get('slug');
+const page = url.searchParams.get('page');
+
+let data = { title: '', content: '' };
+
+if (slug) {
+  const res = await fetch(`/api/posts?slug=${slug}`);
+  data = await res.json();
+}
+
+if (page) {
+  const res = await fetch(`/api/pages?page=${page}`);
+  data = await res.json();
+}
+
+const save = async () => {
+  const body = {
+    title: document.querySelector('#title').value,
+    content: document.querySelector('#content').value,
+    ...(slug ? { slug } : {})
+  };
+  const endpoint = page ? `/api/pages?page=${page}` : '/api/posts';
+  await fetch(endpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  alert('保存成功');
+};
+---
+
+<html>
+  <body>
+    <h1>{slug ? '编辑文章' : page ? `编辑页面 ${page}` : '新建文章'}</h1>
+    <input id="title" value={data.title} placeholder="标题" />
+    <textarea id="content" rows="12">{data.content}</textarea>
+    <button onclick={save}>保存</button>
+  </body>
+</html>

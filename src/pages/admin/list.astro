@@ -1,0 +1,25 @@
+---
+import { listPosts } from '../../lib/kv.ts';
+
+const posts = await listPosts();
+---
+
+<html>
+  <body>
+    <h1>博客管理</h1>
+    <a href="/admin/editor">➕ 新建文章</a>
+    <ul>
+      {posts.map(p => (
+        <li>
+          {p} -
+          <a href={`/admin/editor?slug=${p}`}>编辑</a> -
+          <button
+            onclick={`fetch('/api/posts?slug=${p}', { method: 'DELETE' }).then(() => location.reload())`}
+          >删除</button>
+        </li>
+      ))}
+    </ul>
+    <h2>可编辑页面</h2>
+    <a href="/admin/editor?page=about">编辑 About</a>
+  </body>
+</html>

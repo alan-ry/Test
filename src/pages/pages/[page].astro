@@ -1,0 +1,11 @@
+---
+import { getPage } from '../../lib/kv';
+const { page } = Astro.params;
+const data = await getPage(page);
+if (!data) throw new Error('页面未找到');
+---
+
+<article>
+  <h1>{data.title}</h1>
+  <pre>{data.content}</pre>
+</article>
