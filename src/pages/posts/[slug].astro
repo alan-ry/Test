@@ -1,8 +1,16 @@
 ---
 import { getPost } from '../../lib/kv';
+
 const { slug } = Astro.params;
+
+if (!slug) {
+  throw new Error('slug 参数缺失');
+}
+
 const post = await getPost(slug);
-if (!post) throw new Error('文章未找到');
+if (!post) {
+  throw new Error('文章未找到');
+}
 ---
 
 <article>
